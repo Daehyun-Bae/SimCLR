@@ -57,7 +57,7 @@ def test(net, memory_data_loader, test_data_loader):
         # [D, N]
         feature_bank = torch.cat(feature_bank, dim=0).t().contiguous()
         # [N]
-        feature_labels = torch.tensor(memory_data_loader.dataset.targets, device=feature_bank.device)
+        feature_labels = torch.tensor(memory_data_loader.dataset.lb_seq, device=feature_bank.device)
         # loop test data to predict the label by weighted knn search
         test_bar = tqdm(test_data_loader)
         for data, _, target, _ in test_bar:
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     parser.add_argument('--feature_dim', default=128, type=int, help='Feature dim for latent vector')
     parser.add_argument('--temperature', default=0.5, type=float, help='Temperature used in softmax')
     parser.add_argument('--k', default=200, type=int, help='Top k most similar images used to predict the label')
-    parser.add_argument('--batch_size', default=3, type=int, help='Number of images in each mini-batch')
+    parser.add_argument('--batch_size', default=8, type=int, help='Number of images in each mini-batch')
     parser.add_argument('--epochs', default=500, type=int, help='Number of sweeps over the dataset to train')
     parser.add_argument('--server', action='store_true', help='Run in the server')
     parser.add_argument('--data', dest='data', default='duke', type=str, choices=['market', 'duke'])
