@@ -75,6 +75,7 @@ class Resnet50(nn.Module):
         self.conv5_out = self.layer4(self.conv4_out)
 
         h = self.pooling(self.conv5_out)
+        h = torch.flatten(h, start_dim=1)
         z = self.g(h)
 
         return F.normalize(h, dim=-1), F.normalize(z, dim=-1)
