@@ -1,0 +1,7 @@
+# ignore directories
+.idea/*
+results/*
+
+# cache files
+*.pyc
+
