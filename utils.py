@@ -36,6 +36,7 @@ class ReidDataset(Dataset):
                 transforms.RandomGrayscale(p=0.2),
                 transforms.ToTensor(),
                 transforms.Normalize(normalize[0], normalize[1]),
+                transforms.RandomErasing(p=0.5)
             ])
 
             # self.trans = transforms.Compose([
@@ -171,8 +172,8 @@ if __name__ == '__main__':
     print(ds.n_imgs)
 
     print(ds.lb_ids == sorted(ds.lb_ids))
-    for _ in range(5):
-        img, img2, lb, fn = next(diter)
-        for i in range(4):
-            print(f'{fn[i]} --> {lb[i]} {img[i].shape}')
-        print('-'*60)
+    # for _ in range(5):
+    #     img, img2, lb, fn = next(diter)
+    #     for i in range(4):
+    #         print(f'{fn[i]} --> {lb[i]} {img[i].shape}')
+    #     print('-'*60)
