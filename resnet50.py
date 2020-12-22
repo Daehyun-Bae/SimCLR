@@ -25,7 +25,7 @@ def conv3x3(num_in, num_out, stride=1):
 
 
 class Resnet50(nn.Module):
-    def __init__(self, pretrained=True, max_pool=True, feature_dim=128, *args, **kwargs):
+    def __init__(self, pretrained=None, max_pool=True, feature_dim=128, *args, **kwargs):
         super(Resnet50, self).__init__(*args, **kwargs)
 
         self.pretrained = pretrained
@@ -44,13 +44,14 @@ class Resnet50(nn.Module):
         else:
             self.pooling = nn.AdaptiveAvgPool2d((1, 1))
 
-        if pretrained:
+        if pretrained is not None:
             print("Load pretrained weight", end='...')
-            if os.path.exists('resnet50-19c8e357.pth'):
-                new_state = torch.load('resnet50-19c8e357.pth')
+            if os.path.exists(pretrained):
+                new_state = torch.load(pretrained)
             else:
-                print('download')
-                new_state = model_zoo.load_url(model_url)
+                print('{} not exist'.format(pretrained))
+                exit()
+                # new_state = model_zoo.load_url(model_url)
                 # new_state = load_state_dict_from_url(model_url, progress=True)
             state_dict = self.state_dict()
             for k, v in new_state.items():

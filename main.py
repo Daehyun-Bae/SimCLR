@@ -99,6 +99,7 @@ if __name__ == '__main__':
     parser.add_argument('--server', action='store_true', help='Run in the server')
     parser.add_argument('--data', dest='data', default='duke', type=str, choices=['market', 'duke'])
     parser.add_argument('--exp', dest='exp', default='201211', type=str)
+    parser.add_argument('--pretrain', dest='model', default='results/encoder-duke-src.pth', type=str)
 
     # args parse
     args = parser.parse_args()
@@ -106,6 +107,7 @@ if __name__ == '__main__':
     batch_size, epochs, exp = args.batch_size, args.epochs, args.exp
     IS_SERVER = args.server
     DATA = args.data
+    model_pth = args.model
 
     # data prepare
     train_root = utils.get_data_root(data=DATA, server=IS_SERVER, target='train')
@@ -124,9 +126,9 @@ if __name__ == '__main__':
     # model = Model(feature_dim).cuda()
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print('NUM DEVICE: {} DEVICE: {}'.format(torch.cuda.device_count(), device))
-    model = Resnet50(pretrained=False, max_pool=False, feature_dim=feature_dim).cuda()
+    model = Resnet50(pretrained=model_pth, max_pool=False, feature_dim=feature_dim).cuda()
     if torch.cuda.device_count() > 1:
-        model = torch.nn.DataParallel(model, device_ids=[0,1,2,3])
+        model = torch.nn.DataParallel(model, device_ids=list(range(torch.cuda.device_count())))
     # model.to(device)
 
     # flops, params = profile(model, inputs=(torch.randn(1, 3, 32, 32).cuda(),))
